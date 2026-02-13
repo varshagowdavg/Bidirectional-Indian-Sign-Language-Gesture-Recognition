@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignSetu - Audio to ISL</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">SignSetu</div>
+            <nav>
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('audio_to_isl') }}" class="active">Audio to ISL</a>
+                <a href="{{ url_for('text_to_isl') }}">Text to ISL</a>
+                <a href="{{ url_for('text_to_voice') }}">Text to Voice</a>
+                <a href="{{ url_for('sign_to_voice') }}">Sign to Voice</a>
+                <a href="{{ url_for('about') }}">About</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="hero">
+                <h1>Audio to <span class="highlight">Sign Language</span></h1>
+                <p>Upload an audio file to convert it into Indian Sign Language gestures.</p>
+            </div>
+
+            <div class="upload-section">
+                <div class="recording-controls">
+                    <button id="recordButton" class="btn primary">Start Recording</button>
+                    <button id="stopButton" class="btn secondary" disabled>Stop Recording</button>
+                    <span id="recordingStatus"></span>
+                </div>
+
+                <div class="divider">OR</div>
+
+                <form action="/audio_to_isl" method="post" enctype="multipart/form-data" class="upload-form"
+                    id="uploadForm">
+                    <div class="file-input-wrapper">
+                        <input type="file" name="audio_file" id="audio_file" accept="audio/*">
+                        <label for="audio_file" class="btn secondary">Choose Audio File</label>
+                    </div>
+                    <button type="submit" class="btn primary">Convert to ISL</button>
+                </form>
+
+                {% if error %}
+                <div class="error-message">
+                    <p>{{ error }}</p>
+                </div>
+                {% endif %}
+
+                {% if text %}
+                <div class="result-section">
+                    <h2>Recognized Text:</h2>
+                    <p class="recognized-text">{{ text }}</p>
+
+                    {% if image_url %}
+                    <h2>Generated ISL Gestures:</h2>
+                    <div class="image-container">
+                        <img src="{{ url_for('static', filename=image_url) }}" alt="ISL Gestures">
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 SignSetu Project. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        const recordButton = document.getElementById('recordButton');
+        const stopButton = document.getElementById('stopButton');
+        const recordingStatus = document.getElementById('recordingStatus');
+        const uploadForm = document.getElementById('uploadForm');
+        const fileInput = document.getElementById('audio_file');
+
+        let mediaRecorder;
+        let audioChunks = [];
+
+        recordButton.addEventListener('click', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const audioFile = new File([audioBlob], "recorded_audio.wav", { type: 'audio/wav' });
+
+                    // Create a DataTransfer to set the file input files
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(audioFile);
+                    fileInput.files = dataTransfer.files;
+
+                    // Automatically submit the form
+                    recordingStatus.textContent = "Processing...";
+                    uploadForm.submit();
+                };
+
+                mediaRecorder.start();
+                recordButton.disabled = true;
+                stopButton.disabled = false;
+                recordingStatus.textContent = "Recording...";
+                recordingStatus.style.color = "red";
+            } catch (err) {
+                console.error("Error accessing microphone:", err);
+                alert("Error accessing microphone. Please ensure you have granted permission.");
+            }
+        });
+
+        stopButton.addEventListener('click', () => {
+            mediaRecorder.stop();
+            recordButton.disabled = false;
+            stopButton.disabled = true;
+            recordingStatus.textContent = "Stopped";
+            recordingStatus.style.color = "var(--text-color)";
+
+            // Stop all tracks to release microphone
+            mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        });
+
+        // Update file label when file is chosen manually
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                document.querySelector('label[for="audio_file"]').textContent = e.target.files[0].name;
+            }
+        });
+    </script>
+</body>
+
+</html>

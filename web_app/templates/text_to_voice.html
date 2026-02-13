@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignSetu - Text to Voice</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">SignSetu</div>
+            <nav>
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('audio_to_isl') }}">Audio to ISL</a>
+                <a href="{{ url_for('text_to_isl') }}">Text to ISL</a>
+                <a href="{{ url_for('text_to_voice') }}" class="active">Text to Voice</a>
+                <a href="{{ url_for('sign_to_voice') }}">Sign to Voice</a>
+                <a href="{{ url_for('about') }}">About</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="hero">
+                <h1>Text to <span class="highlight">Voice</span></h1>
+                <p>Type any text to convert it into speech.</p>
+            </div>
+
+            <div class="upload-section">
+                <form action="/text_to_voice" method="post" class="upload-form"
+                    style="flex-direction: row; width: 100%; justify-content: center;">
+                    <input type="text" name="text_input" placeholder="Type your text here..." required
+                        style="padding: 1rem; border-radius: 0.5rem; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.1); color: var(--text-color); width: 60%; font-size: 1.1rem;">
+                    <button type="submit" class="btn primary">Speak</button>
+                </form>
+
+                {% if error %}
+                <div class="error-message">
+                    <p>{{ error }}</p>
+                </div>
+                {% endif %}
+
+                {% if audio_url %}
+                <div class="result-section">
+                    <h2>Input Text:</h2>
+                    <p class="recognized-text">{{ text }}</p>
+
+                    <h2>Generated Audio:</h2>
+                    <div class="audio-container" style="margin-top: 1rem;">
+                        <audio controls autoplay>
+                            <source src="{{ url_for('static', filename=audio_url) }}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 SignSetu Project. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+
+</html>

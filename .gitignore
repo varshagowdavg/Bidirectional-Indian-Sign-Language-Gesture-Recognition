@@ -1,0 +1,11 @@
+dataset
+.env
+isl_pro
+Indian
+__pycache__
+test.py
+test2.py
+test3.py
+web_app/static/generated_images/
+*.pyc
+.DS_Store
