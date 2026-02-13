@@ -1,5 +1,7 @@
 ## Overview
-This project (SIH 2024) aims to bridge the communication gap between the deaf community and individuals who do not know sign language by providing a robust system to convert spoken language into Indian Sign Language (ISL) and vice versa. The tool facilitates seamless interaction in various scenarios, such as healthcare and public announcements, empowering the deaf community to access critical information and engage fully in society.
+This project aims to bridge the communication gap between the deaf community and individuals who are unfamiliar with sign language. It provides an intelligent system to convert speech and text into Indian Sign Language (ISL) gestures and vice versa.
+
+The system enables seamless interaction in real-world scenarios such as public announcements, healthcare communication, and mobile-based interpretation, ensuring better accessibility and inclusivity.
 
 ## Key Features
 - **Speech to ISL Conversion**:
@@ -38,11 +40,14 @@ This project (SIH 2024) aims to bridge the communication gap between the deaf co
 - **Regional ISL Variations**:
   - Incorporating adaptability for regional differences in ISL.
 
-## Full-Stack Project Repository
-The complete source code for the integrated full-stack application — including both frontend and backend components — is available at the following GitHub repository:
+## How to Run the Project
+1. git clone https://github.com/your-username/Indian-Sign-Language-Gesture-Recognition.git
+2. pip install -r requirements.txt
+3. python main.py
+   
+## Output 
+![Output](screenshots/demo.png)
 
-🔗 [Lingua - GitHub Repository](https://github.com/Team-GenX-H4CK3RS/Lingua)
+## 👩‍💻 Author
+Varsha Gowda
 
-
-## Acknowledgements
-- **Sarvam AI** for speech recognition.
