@@ -41,7 +41,7 @@ The system enables seamless interaction in real-world scenarios such as public a
   - Incorporating adaptability for regional differences in ISL.
 
 ## How to Run the Project
-1. git clone https://github.com/your-username/Indian-Sign-Language-Gesture-Recognition.git
+1. git clone 
 2. pip install -r requirements.txt
 3. python main.py
    
